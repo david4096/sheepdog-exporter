@@ -134,7 +134,7 @@ class Exporter:
         '''
         projects_url = '{}/{}/'.format(self.sheep_url, program)
         raw_projects = requests.get(projects_url, headers=self.headers()).json()['links']
-        return map(os.path.basename, raw_projects)
+        return [os.path.basename(x) for x in raw_projects]
     
     def get_all_submissions(self, program, project):
         '''
