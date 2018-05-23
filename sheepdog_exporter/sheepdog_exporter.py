@@ -116,12 +116,19 @@ class Exporter:
         reader = csv.DictReader(buf, delimiter='\t')
         return list(reader)
     
+    def get_projects(self, program):
+        '''
+        Returns the list of projects for a given program.
+        '''
+        projects_url = '{}/{}/'.format(self.sheep_url, program)
+        raw_projects = requests.get(projects_url, headers=self.headers()).json()['links']
+        return map(os.path.basename, raw_projects)
+    
     def get_all_submissions(self, program, project):
         '''
         Export all of the types for a given program and project
         and return them as a dictionary with keys for each type.
         '''
-        return_dictionary = {}
         print('Getting dictionary for {}-{}'.format(program, project))
         submission_dictionary = self.get_dictionary(program, project)
         submission_list = pmap(lambda x: self.get_json_submission_by_type(program, project, os.path.basename(x)), submission_dictionary['links'])
@@ -188,8 +195,11 @@ USAGE
 
         if args.program and not args.project:
             programs = exporter.get_projects(args.program)
-            print('Projects for program: {}'.format(args.project))
-            print('\n'.join(programs))
+            print('Projects for program {}:'.format(args.program))
+            print('')
+            print("     {}".format('\n     '.join(programs)))
+            print('')
+            print('Try entering `sheepdog-exporter {} {}` to output "topmed-public.json"!'.format(args.program, programs[0]))
         if args.program and args.project:
             print('Exporting {}-{} from {}'.format(args.program, args.project, args.dcp_url))
             try:
