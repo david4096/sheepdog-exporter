@@ -251,7 +251,7 @@ USAGE
             lengths = [len(exported[k]) for k in exported.keys()]
             keys = exported.keys()
             content = filter(lambda x: x[1] > 0, zip(keys, lengths))
-            pretty_content = "\n".join(['{} {}'.format(os.path.basename(x[0]).ljust(32), x[1]) for x in content])
+            pretty_content = "\n".join(['{} {}'.format(os.path.basename(x[0]).ljust(56), x[1]) for x in content])
             print(pretty_content)
             print('\nThe output has been written to {}!'.format(output_path))
         return 0
