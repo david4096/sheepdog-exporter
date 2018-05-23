@@ -190,8 +190,8 @@ USAGE
         parser.add_argument('program', nargs='?', type=str, help='The DCP Program to export. Leave blank to list programs.')
         parser.add_argument('project', nargs='?', type=str, help='The DCP Project to export. Leave blank to list projects.')
         parser.add_argument('--dcp-url', type=str, help='The URL of the DCP service (default: https://dcp.bionimbus.org', default='https://dcp.bionimbus.org')
-        parser.add_argument('--credentials', type=str, help='The path to your DCP credentials.json (default: ./credentials.json', default='./credentials.json')
-        parser.add_argument('--output_path', type=str, help='The path to place the resulting export (default: ./', default='./')
+        parser.add_argument('--credentials', type=str, help='The path to your DCP credentials.json (default: ./credentials.json)', default='./credentials.json')
+        parser.add_argument('--output-path', type=str, help='The path to place the resulting export (default: ./)', default='./')
         
         
         # Process arguments
