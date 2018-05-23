@@ -33,6 +33,7 @@ from io import StringIO
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
+from pkg_resources._vendor.appdirs import __version_info__
 
 __all__ = []
 __version__ = 0.1
@@ -153,15 +154,14 @@ def main(argv=None): # IGNORE:C0111
         argv = sys.argv
     else:
         sys.argv.extend(argv)
-
     program_name = os.path.basename(sys.argv[0])
     program_version = "v%s" % __version__
     program_build_date = str(__updated__)
     program_license = '''
-    sheepdog-exporter
+    sheepdog-exporter v{}
     
 
-  Created by David Steinberg on %s.
+  Created by David Steinberg on {}.
   Copyright 2018 Genomics Institute. All rights reserved.
 
   Licensed under the Apache License 2.0
@@ -171,7 +171,7 @@ def main(argv=None): # IGNORE:C0111
   or conditions of any kind, either express or implied.
 
 USAGE
-''' % (str(__date__))
+'''.format(program_version, str(__date__))
 
     try:
         print('''
@@ -179,12 +179,12 @@ USAGE
             |                    |                                    |          
         o-o O--o o-o o-o o-o   o-O o-o o--o     o-o \ / o-o  o-o o-o -o- o-o o-o 
          \  |  | |-' |-' |  | |  | | | |  |     |-'  o  |  | | | |    |  |-' |   
-        o-o o  o o-o o-o O-o   o-o o-o o--O     o-o / \ O-o  o-o o    o  o-o o   
+        o-o o  o o-o o-o O-o   o-o o-o o--O     o-o / \ O-o  o-o o    o  o-o o    {}.{}.{}
                          |                |             |                        
                          o             o--o             o    
                                              
                          Export DCP metadata from the CLI!!!
-        ''')
+        '''.format(*__version_info__))
         # Setup argument parser
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument('program', nargs='?', type=str, help='The DCP Program to export. Leave blank to list programs.')
