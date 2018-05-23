@@ -65,7 +65,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
     ],
-    version='0.1.3',
+    version='0.1.4',
     keywords=['genomics', 'metadata', 'NIHDataCommons'],
     # Use setuptools_scm to set the version number automatically from Git
 )
