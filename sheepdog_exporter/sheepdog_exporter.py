@@ -226,8 +226,11 @@ USAGE
                 return 1
             output_path = '{}/{}-{}.json'.format(
                 args.output_path, args.program, args.project)
-            outfile = open(output_path, 'w')
-            json.dump(exported, outfile)
+            try:
+                outfile = open(output_path, 'w')
+                json.dump(exported, outfile)
+            except Exception as e:
+                print('Failed to create output JSON, does the directory exist?')
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
