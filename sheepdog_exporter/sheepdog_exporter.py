@@ -116,6 +116,14 @@ class Exporter:
         reader = csv.DictReader(buf, delimiter='\t')
         return list(reader)
     
+    def get_programs(self):
+        '''
+        Returns the list of projects for a given program.
+        '''
+        programs_url = '{}/'.format(self.sheep_url)
+        raw_programs = requests.get(programs_url, headers=self.headers()).json()['links']
+        return map(os.path.basename, raw_programs)
+    
     def get_projects(self, program):
         '''
         Returns the list of projects for a given program.
@@ -192,15 +200,23 @@ USAGE
         exporter = Exporter(
             args.credentials,
             args.dcp_url)
-
-        if args.program and not args.project:
-            programs = exporter.get_projects(args.program)
-            print('Projects for program {}:'.format(args.program))
+        
+        if not args.program:
+            programs = exporter.get_programs()
+            print('Programs available at {}:'.format(args.dcp_url))
             print('')
             print("     {}".format('\n     '.join(programs)))
             print('')
-            print('Try entering `sheepdog-exporter {} {}` to output "topmed-public.json"!'.format(args.program, programs[0]))
-        if args.program and args.project:
+            print('Try entering `sheepdog-exporter {}` to list projects!'.format(args.program, programs[0]))
+        
+        elif args.program and not args.project:
+            projects = exporter.get_projects(args.program)
+            print('Projects for program {}:'.format(args.program))
+            print('')
+            print("     {}".format('\n     '.join(projects)))
+            print('')
+            print('Try entering `sheepdog-exporter {program} {project}` to output "{program}-{project}.json"!'.format(project=projects[0], program=args.program))
+        elif args.program and args.project:
             print('Exporting {}-{} from {}'.format(args.program, args.project, args.dcp_url))
             try:
                 exported = exporter.get_all_submissions(
