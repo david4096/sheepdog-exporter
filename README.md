@@ -1,4 +1,5 @@
 # sheepdog-exporter
+<img src="https://travis-ci.org/david4096/sheepdog-exporter.svg?branch=master" />
 
 Export metadata from the DCP.
 
