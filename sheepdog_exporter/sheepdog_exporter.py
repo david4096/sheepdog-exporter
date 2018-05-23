@@ -122,7 +122,7 @@ class Exporter:
         '''
         programs_url = '{}/'.format(self.sheep_url)
         raw_programs = requests.get(programs_url, headers=self.headers()).json()['links']
-        return map(os.path.basename, raw_programs)
+        return [os.path.basename(x) for x in raw_programs]
     
     def get_projects(self, program):
         '''
