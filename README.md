@@ -1,6 +1,5 @@
 # sheepdog-exporter
-<img src="https://travis-ci.org/david4096/sheepdog-exporter.svg?branch=master" />
-<img src="https://img.shields.io/pypi/v/sheepdog-exporter.svg" />
+<img src="https://travis-ci.org/david4096/sheepdog-exporter.svg?branch=master" /> <img src="https://img.shields.io/pypi/v/sheepdog-exporter.svg" />
 
 Export metadata from the DCP.
 
@@ -17,7 +16,7 @@ with a filename corresponding to the program and project. `program-project.json`
 
 ## Development
 
-* A simple test demonstrate usage of the exporter class in `test`.
+* A simple test demonstrates usage of the Exporter class in `test`.
 
 ## Issues
 
