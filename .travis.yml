@@ -4,10 +4,9 @@ python:
 before_install:
 - sudo apt-get update -qq
 - pip install . --process-dependency-links
-- pip install -r python/dev-requirements.txt
+- pip install -r dev-requirements.txt
 script:
-- nosetests
-- sheepdog-exporter topmed public
+- sheepdog-exporter -h
 deploy:
   provider: pypi
   on:

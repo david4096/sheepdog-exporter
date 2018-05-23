@@ -4,7 +4,7 @@ Created on May 22, 2018
 @author: David Steinberg
 '''
 import unittest
-from sheepdog_exporter.exporter import Exporter
+from sheepdog_exporter.sheepdog_exporter import Exporter
 
 
 class Test(unittest.TestCase):
