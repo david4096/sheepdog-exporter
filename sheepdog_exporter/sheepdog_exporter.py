@@ -231,9 +231,12 @@ USAGE
                 json.dump(exported, outfile)
             except Exception as e:
                 print('Failed to create output JSON, does the directory exist?')
+                return 1
+            print('Successfully wrote to {}!'.format(output_path))
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
+        print('\nReceived keyboard interrupt, exiting!')
         return 0
     except Exception as e:
         indent = len(program_name) * " "
