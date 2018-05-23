@@ -111,11 +111,14 @@ class Exporter:
         Returns the JSON version of a program, project, type triplet
         and returns a list of dictionaries.
         '''
-        print('Getting {} submissions.'.format(my_type))
+        print('Requesting {} submissions.'.format(my_type))
         # FIXME JSON serialization is done by the server
         buf = StringIO(self.get_submissions_by_type(program, project, my_type).decode('utf-8'))
         reader = csv.DictReader(buf, delimiter='\t')
-        return list(reader)
+        dict_list = list(reader)
+        if len(dict_list) > 0:
+            print('Got {} {} submissions.'.format(len(dict_list), my_type))
+        return dict_list
     
     def get_programs(self):
         '''
@@ -175,6 +178,15 @@ USAGE
 
     try:
         print('''
+                                       __  _
+                                   .-.'  `; `-._  __  _
+                                  (_,         .-:'  `; `-._
+                                ,'o"(        (_,           )
+                               (__,-'      ,'o"(            )>
+                                  (       (__,-'            )
+                                   `-'._.--._(             )
+                                      |||  |||`-'._.--._.-'
+                                                 |||  |||
             o                    o                                    o          
             |                    |                                    |          
         o-o O--o o-o o-o o-o   o-O o-o o--o     o-o \ / o-o  o-o o-o -o- o-o o-o 
@@ -232,7 +244,16 @@ USAGE
             except Exception as e:
                 print('Failed to create output JSON, does the directory exist?')
                 return 1
-            print('Successfully wrote to {}!'.format(output_path))
+            
+            print('''\n\n       Successfully exported metadata!
+            
+            ''')
+            lengths = [len(exported[k]) for k in exported.keys()]
+            keys = exported.keys()
+            content = filter(lambda x: x[1] > 0, zip(keys, lengths))
+            pretty_content = "\n".join(['{} {}'.format(os.path.basename(x[0]).ljust(32), x[1]) for x in content])
+            print(pretty_content)
+            print('\nThe output has been written to {}!'.format(output_path))
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
