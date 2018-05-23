@@ -207,7 +207,7 @@ USAGE
             print('')
             print("     {}".format('\n     '.join(programs)))
             print('')
-            print('Try entering `sheepdog-exporter {}` to list projects!'.format(args.program, programs[0]))
+            print('Try entering `sheepdog-exporter {}` to list projects!'.format(programs[0]))
         
         elif args.program and not args.project:
             projects = exporter.get_projects(args.program)
