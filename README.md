@@ -1,9 +1,12 @@
 # sheepdog-exporter
 <img src="https://travis-ci.org/david4096/sheepdog-exporter.svg?branch=master" />
+<img src="https://img.shields.io/pypi/v/sheepdog-exporter.svg" />
 
 Export metadata from the DCP.
 
 ```
+# Download the credentials.json from the DCP web UI and put in the current directory
+pip install sheepdog-exporter
 sheepdog-exporter program project
 
 sheepdog-exporter program project --dcp-url my-url --credentials path/to/credentials --output-path /path/to/write/output
