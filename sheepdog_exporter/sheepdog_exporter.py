@@ -261,10 +261,11 @@ class Exporter:
         '''
         Get the indexd document for a given indexd_id.
         '''
-        print(indexd_id)
         response = requests.get("{}/{}".format(self.indexd_url, indexd_id))
         if response.status_code != 200:
-            print('404')
+            print('F', end='', flush=True)
+        else:
+            print('.', end='', flush=True)
         return response.json()
     
     def get_indexd_docs(self, id_list):
@@ -282,8 +283,8 @@ class Exporter:
         try:
             return self.indexd_doc_to_dos(indexd_doc)
         except Exception as e:
-            print('indexd doc failed to convert {}'.format(indexd_doc))
-            print(str(e))
+            #print('indexd doc failed to convert {}'.format(indexd_doc))
+            #print(str(e))
             return {}
     
     def indexd_doc_to_dos(self, indexd_doc):
@@ -291,7 +292,7 @@ class Exporter:
         Converts an indexd doc into a Data Object for serialization.
         '''
         # TODO whats the name?
-        if not indexd_doc['file_name']:
+        if not indexd_doc.get('file_name', None):
             name = ""
         else:
             name = indexd_doc['file_name']
@@ -348,9 +349,11 @@ class Exporter:
         getting the object from indexd as necessary.
         '''
         keys = [os.path.basename(x) for x in submissions.keys()]
+        print('Checking which types have associated data files...')
         data_keys = [x[1] for x in filter(lambda x: x[0], zip(pmap(lambda x: self.is_type_data_category(program, project, x), keys), keys))]
-        print('Found {} keys with data files.'.format(len(data_keys)))
+        print('Found {} types with data files: '.format(len(data_keys)))
         print(', '.join(data_keys))
+        print('Getting URL paths from indexd... (.=success, F=failure)')
         return functools.reduce(lambda x, y: x + y, pmap(lambda x: self.submission_manifest(submissions[x]), data_keys))
         
     
@@ -362,17 +365,20 @@ class Exporter:
         Exports a given program and project as a dictionary
         and returns that dictionary.
         '''
-        print('Getting submissions.')
+        print('Requesting metadata submissions.')
         submissions = self.get_all_submissions(program, project)
-        print('Got submissions.')
-        print('Generating manifest.')
-        manifest = list(filter(lambda x: x != {}, self.manifest(program, project, submissions)))
+        print('Received all metadata submissions!')
+        print('Generating file manifest, this may take some time...')
+        manifest = self.manifest(program, project, submissions)
+        # Some last minute QA
+        # manifest = list(filter(lambda x: x != {}, self.manifest(program, project, submissions)))
+        print('')
         if {} in manifest:
-            print('WARNING SOME FILES COULD NOT BE FOUND!!!!')
+            print('       ERROR SOME FILES COULD NOT BE FOUND!!!!')
             print('There was a problem finding paths for some of the files.')
             print('This could be due to an error in loading the metadata.')
             print('Please contact the system administrator!')
-            return {}
+            exit()
         output = {'metadata': submissions, 'manifest': manifest}
         self.validate_output(output)
         return output
