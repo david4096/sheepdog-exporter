@@ -371,15 +371,14 @@ class Exporter:
         print('Generating file manifest, this may take some time...')
         manifest = self.manifest(program, project, submissions)
         # Some last minute QA
-        # manifest = list(filter(lambda x: x != {}, self.manifest(program, project, submissions)))
+        pruned_manifest = list(filter(lambda x: x != {}, manifest))
         print('')
         if {} in manifest:
-            print('       ERROR SOME FILES COULD NOT BE FOUND!!!!')
+            print('       WARNING SOME FILES COULD NOT BE FOUND!!!!')
             print('There was a problem finding paths for some of the files.')
             print('This could be due to an error in loading the metadata.')
             print('Please contact the system administrator!')
-            exit()
-        output = {'metadata': submissions, 'manifest': manifest}
+        output = {'metadata': submissions, 'manifest': pruned_manifest}
         self.validate_output(output)
         return output
 
