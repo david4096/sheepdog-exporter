@@ -23,6 +23,7 @@ import csv
 import json
 
 import csv
+import jsonschema
 import functools
 import json
 import os
@@ -35,6 +36,7 @@ from io import StringIO
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from pkg_resources._vendor.appdirs import __version_info__
+from _operator import index
 
 __all__ = []
 __version__ = 0.1
@@ -158,6 +160,8 @@ class Exporter:
         '''
         print(indexd_id)
         response = requests.get("{}/{}".format(self.indexd_url, indexd_id))
+        if response.status_code != 200:
+            print('404')
         return response.json()
     
     def get_indexd_docs(self, id_list):
@@ -166,6 +170,18 @@ class Exporter:
         associated with them.
         '''
         return pmap(self.get_indexd_doc, id_list)
+    
+    def safe_indexd_to_dos(self, indexd_doc):
+        '''
+        Will throw a useful exception if the conversion to
+        DOS fails (usually because the item wasn't found).
+        '''
+        try:
+            return self.indexd_doc_to_dos(indexd_doc)
+        except Exception as e:
+            print('indexd doc failed to convert {}'.format(indexd_doc))
+            print(str(e))
+            exit()
     
     def indexd_doc_to_dos(self, indexd_doc):
         '''
@@ -200,9 +216,9 @@ class Exporter:
         Returns True if the category is a data file so we
         know whether to grab the submissions indexd document.
         '''
-        data_file_category = 'data_file'
+        data_file_categories = ['data_file', 'metadata_file', 'index_file']
         type_schema = self.get_schema_for_type(program, project, my_type)
-        if type_schema.get('category', '') == data_file_category:
+        if type_schema.get('category', '') in data_file_categories:
             return True
         else:
             return False
@@ -215,7 +231,7 @@ class Exporter:
         # FIXME this changes in the next release to object_id
         id_key = 'id'
         id_list = [x[id_key] for x in submission_list]
-        return [self.indexd_doc_to_dos(x) for x in self.get_indexd_docs(id_list)]
+        return [self.safe_indexd_to_dos(x) for x in self.get_indexd_docs(id_list)]
     
     
     def manifest(self, program, project, submissions):
