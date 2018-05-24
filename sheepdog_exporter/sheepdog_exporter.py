@@ -36,25 +36,128 @@ from io import StringIO
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from pkg_resources._vendor.appdirs import __version_info__
-from _operator import index
 
 __all__ = []
 __version__ = 0.1
 __date__ = '2018-05-22'
-__updated__ = '2018-05-22'
+__updated__ = '2018-05-23'
 
 class Exporter:
     '''
     Export JSON following the DCP metadata including a 
     manifest of all files and any available URL data.
     '''
-
     def __init__(self, credentials_filename, base_url):
         self.base_url = base_url
         self.access_token = self.access_token(
             credentials_filename)
         self.sheep_url = '{}/api/v0/submission'.format(base_url)
         self.indexd_url = '{}/index/index/'.format(base_url)
+        self.schema = self.init_schema()
+    
+    
+    def init_schema(self):
+        '''
+        Returns the JSON schema for the resulting output.
+        '''
+        data_object_schema = {
+            'type': 'object',
+            'required': ['id', 'urls'],
+            'properties': {
+              'id': {
+                'type': 'string',
+                'description': 'REQUIRED\nAn identifier unique to this Data Object.'
+              },
+              'name': {
+                'type': 'string',
+                'description': 'OPTIONAL\nA string that can be optionally used to name a Data Object.'
+              },
+              'size': {
+                'type': 'string',
+                'format': 'int64',
+                'description': 'REQUIRED\nThe computed size in bytes.'
+              },
+              'created': {
+                'type': 'string',
+                'format': 'date-time',
+                'description': 'REQUIRED\nTimestamp of object creation in RFC3339.'
+              },
+              'updated': {
+                'type': 'string',
+                'format': 'date-time',
+                'description': 'OPTIONAL\nTimestamp of update in RFC3339, identical to create timestamp in systems\nthat do not support updates.'
+              },
+              'version': {
+                'type': 'string',
+                'description': 'OPTIONAL\nA string representing a version.'
+              },
+              'mime_type': {
+                'type': 'string',
+                'description': 'OPTIONAL\nA string providing the mime-type of the Data Object.\nFor example, \'application/json\'.'
+              },
+              'checksums': {
+                'type': 'array',
+                'items': {
+                      "type": "object",
+                      "properties": {
+                        "checksum": {
+                          "type": "string",
+                          "description": "REQUIRED\nThe hex-string encoded checksum for the Data."
+                        },
+                        "type": {
+                          "type": "string",
+                          "description": "OPTIONAL\nThe digest method used to create the checksum. If left unspecified md5\nwill be assumed.\n\npossible values:\nmd5                # most blob stores provide a checksum using this\nmultipart-md5      # multipart uploads provide a specialized tag in S3\nsha256\nsha512"
+                        }
+                      }
+                    },
+                
+                'description': 'REQUIRED\nThe checksum of the Data Object. At least one checksum must be provided.'
+              },
+              'urls': {
+                'type': 'array',
+                    'items': {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "REQUIRED\nA URL that can be used to access the file."
+                      },
+                      "system_metadata": {
+                        "$ref": "#/definitions/SystemMetadata"
+                      },
+                      "user_metadata": {
+                        "$ref": "#/definitions/UserMetadata"
+                      }
+                    }
+                },
+                'description': 'OPTIONAL\nThe list of URLs that can be used to access the Data Object.'
+              },
+              'description': {
+                'type': 'string',
+                'description': 'OPTIONAL\nA human readable description of the contents of the Data Object.'
+              },
+              'aliases': {
+                'type': 'array',
+                'items': {
+                  'type': 'string'
+                },
+                'description': "OPTIONAL\nA list of strings that can be used to find this Data Object.\nThese aliases can be used to represent the Data Object's location in\na directory (e.g. \'bucket/folder/file.name\') to make Data Objects\nmore discoverable."
+              }
+            }
+          }
+        
+        
+        schema = {
+            'type': 'object',
+            'properties': {
+                'metadata': {
+                    'type': 'object'},
+                'manifest': {
+                    'type': 'array',
+                    'items': data_object_schema},
+                }
+            }
+        return schema
     
     def headers(self):
         '''
@@ -181,19 +284,23 @@ class Exporter:
         except Exception as e:
             print('indexd doc failed to convert {}'.format(indexd_doc))
             print(str(e))
-            exit()
+            return {}
     
     def indexd_doc_to_dos(self, indexd_doc):
         '''
         Converts an indexd doc into a Data Object for serialization.
         '''
         # TODO whats the name?
+        if not indexd_doc['file_name']:
+            name = ""
+        else:
+            name = indexd_doc['file_name']
         data_object = {
             "id": indexd_doc['did'],
-            "name": indexd_doc['file_name'],
+            "name": name,
             'created': indexd_doc['created_date'],
             'updated': indexd_doc['updated_date'],
-            "size": indexd_doc['size'],
+            "size": str(indexd_doc['size']),
             "version": indexd_doc['rev']
         }
         # parse out checksums
@@ -246,7 +353,10 @@ class Exporter:
         print(', '.join(data_keys))
         return functools.reduce(lambda x, y: x + y, pmap(lambda x: self.submission_manifest(submissions[x]), data_keys))
         
-        
+    
+    def validate_output(self, output):
+        jsonschema.validate(output, self.schema)
+    
     def export(self, program, project):
         '''
         Exports a given program and project as a dictionary
@@ -256,8 +366,16 @@ class Exporter:
         submissions = self.get_all_submissions(program, project)
         print('Got submissions.')
         print('Generating manifest.')
-        manifest = self.manifest(program, project, submissions)
-        return {'metadata': submissions, 'manifest': manifest}
+        manifest = list(filter(lambda x: x != {}, self.manifest(program, project, submissions)))
+        if {} in manifest:
+            print('WARNING SOME FILES COULD NOT BE FOUND!!!!')
+            print('There was a problem finding paths for some of the files.')
+            print('This could be due to an error in loading the metadata.')
+            print('Please contact the system administrator!')
+            return {}
+        output = {'metadata': submissions, 'manifest': manifest}
+        self.validate_output(output)
+        return output
 
 
 def main(argv=None): # IGNORE:C0111
@@ -268,7 +386,7 @@ def main(argv=None): # IGNORE:C0111
     else:
         sys.argv.extend(argv)
     program_name = os.path.basename(sys.argv[0])
-    program_version = "v%s" % __version__
+    program_version = '{}'.format(__version__)
     program_build_date = str(__updated__)
     program_license = '''
     sheepdog-exporter v{}
