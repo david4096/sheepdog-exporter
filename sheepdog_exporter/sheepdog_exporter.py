@@ -394,7 +394,7 @@ def main(argv=None): # IGNORE:C0111
     program_version = '{}'.format(__version__)
     program_build_date = str(__updated__)
     program_license = '''
-    sheepdog-exporter v{}
+    sheepdog-exporter {}
     
 
   Created by David Steinberg on {}.
@@ -424,12 +424,12 @@ USAGE
             |                    |                                    |          
         o-o O--o o-o o-o o-o   o-O o-o o--o     o-o \ / o-o  o-o o-o -o- o-o o-o 
          \  |  | |-' |-' |  | |  | | | |  |     |-'  o  |  | | | |    |  |-' |   
-        o-o o  o o-o o-o O-o   o-o o-o o--O     o-o / \ O-o  o-o o    o  o-o o    {}.{}.{}
+        o-o o  o o-o o-o O-o   o-o o-o o--O     o-o / \ O-o  o-o o    o  o-o o    {}
                          |                |             |                        
                          o             o--o             o    
                                              
                          Export DCP metadata from the CLI!!!
-        '''.format(*__version_info__))
+        '''.format(program_version))
         # Setup argument parser
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument('program', nargs='?', type=str, help='The DCP Program to export. Leave blank to list programs.')
