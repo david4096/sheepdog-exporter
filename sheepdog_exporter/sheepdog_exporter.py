@@ -23,6 +23,7 @@ import csv
 import json
 
 import csv
+import functools
 import json
 import os
 
@@ -40,14 +41,18 @@ __version__ = 0.1
 __date__ = '2018-05-22'
 __updated__ = '2018-05-22'
 
-
 class Exporter:
+    '''
+    Export JSON following the DCP metadata including a 
+    manifest of all files and any available URL data.
+    '''
 
     def __init__(self, credentials_filename, base_url):
         self.base_url = base_url
         self.access_token = self.access_token(
             credentials_filename)
         self.sheep_url = '{}/api/v0/submission'.format(base_url)
+        self.indexd_url = '{}/index/index/'.format(base_url)
     
     def headers(self):
         '''
@@ -145,9 +150,98 @@ class Exporter:
         submission_dictionary = self.get_dictionary(program, project)
         submission_list = pmap(lambda x: self.get_json_submission_by_type(program, project, os.path.basename(x)), submission_dictionary['links'])
         
-        return dict(zip(submission_dictionary['links'], submission_list))
-
-
+        return dict(zip([os.path.basename(x) for x in submission_dictionary['links']], submission_list))
+    
+    def get_indexd_doc(self, indexd_id):
+        '''
+        Get the indexd document for a given indexd_id.
+        '''
+        print(indexd_id)
+        response = requests.get("{}/{}".format(self.indexd_url, indexd_id))
+        return response.json()
+    
+    def get_indexd_docs(self, id_list):
+        '''
+        Takes a list of ids and returns the indexd documents
+        associated with them.
+        '''
+        return pmap(self.get_indexd_doc, id_list)
+    
+    def indexd_doc_to_dos(self, indexd_doc):
+        '''
+        Converts an indexd doc into a Data Object for serialization.
+        '''
+        # TODO whats the name?
+        data_object = {
+            "id": indexd_doc['did'],
+            "name": indexd_doc['file_name'],
+            'created': indexd_doc['created_date'],
+            'updated': indexd_doc['updated_date'],
+            "size": indexd_doc['size'],
+            "version": indexd_doc['rev']
+        }
+        # parse out checksums
+        data_object['checksums'] = []
+        for k in indexd_doc['hashes']:
+            data_object['checksums'].append(
+                {'checksum': indexd_doc['hashes'][k], 'type': k})
+    
+        # parse out the urls
+        data_object['urls'] = []
+        for url in indexd_doc['urls']:
+            data_object['urls'].append({
+                'url': url})
+           
+        return data_object
+    
+    
+    def is_type_data_category(self, program, project, my_type):
+        '''
+        Returns True if the category is a data file so we
+        know whether to grab the submissions indexd document.
+        '''
+        data_file_category = 'data_file'
+        type_schema = self.get_schema_for_type(program, project, my_type)
+        if type_schema.get('category', '') == data_file_category:
+            return True
+        else:
+            return False
+    
+    def submission_manifest(self, submission_list):
+        '''
+        Generates a manifest for the given type given the list
+        of submissions for that type.
+        '''
+        # FIXME this changes in the next release to object_id
+        id_key = 'id'
+        id_list = [x[id_key] for x in submission_list]
+        return [self.indexd_doc_to_dos(x) for x in self.get_indexd_docs(id_list)]
+    
+    
+    def manifest(self, program, project, submissions):
+        '''
+        Generates a file manifest from a list of submissions
+        by checking for the category in the JSON schema and
+        getting the object from indexd as necessary.
+        '''
+        keys = [os.path.basename(x) for x in submissions.keys()]
+        data_keys = [x[1] for x in filter(lambda x: x[0], zip(pmap(lambda x: self.is_type_data_category(program, project, x), keys), keys))]
+        print('Found {} keys with data files.'.format(len(data_keys)))
+        print(', '.join(data_keys))
+        return functools.reduce(lambda x, y: x + y, pmap(lambda x: self.submission_manifest(submissions[x]), data_keys))
+        
+        
+    def export(self, program, project):
+        '''
+        Exports a given program and project as a dictionary
+        and returns that dictionary.
+        '''
+        print('Getting submissions.')
+        submissions = self.get_all_submissions(program, project)
+        print('Got submissions.')
+        print('Generating manifest.')
+        manifest = self.manifest(program, project, submissions)
+        return {'metadata': submissions, 'manifest': manifest}
 
 
 def main(argv=None): # IGNORE:C0111
@@ -231,7 +325,7 @@ USAGE
         elif args.program and args.project:
             print('Exporting {}-{} from {}'.format(args.program, args.project, args.dcp_url))
             try:
-                exported = exporter.get_all_submissions(
+                exported = exporter.export(
                     args.program, args.project)
             except Exception as e:
                 print(str(e))
@@ -243,16 +337,19 @@ USAGE
                 json.dump(exported, outfile)
             except Exception as e:
                 print('Failed to create output JSON, does the directory exist?')
+                print(str(e))
                 return 1
             
             print('''\n\n       Successfully exported metadata!
             
             ''')
-            lengths = [len(exported[k]) for k in exported.keys()]
-            keys = exported.keys()
+            lengths = [len(exported['metadata'][k]) for k in exported['metadata'].keys()]
+            keys = exported['metadata'].keys()
             content = filter(lambda x: x[1] > 0, zip(keys, lengths))
             pretty_content = "\n".join(['{} {}'.format(os.path.basename(x[0]).ljust(56), x[1]) for x in content])
             print(pretty_content)
+            print('')
+            print('{} paths have been written to the file manifest!'.format(len(exported['manifest'])))
             print('\nThe output has been written to {}!'.format(output_path))
         return 0
     except KeyboardInterrupt:
