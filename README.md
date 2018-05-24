@@ -14,6 +14,20 @@ sheepdog-exporter program project --dcp-url my-url --credentials path/to/credent
 This will write a `.json` file with the corresponding metadata
 with a filename corresponding to the program and project. `program-project.json`.
 
+The resulting JSON has the form:
+
+```
+{
+  "manifest": [{DataObject},...],
+  "metadata": {
+        metadata_type: [{metadata_value}], ...
+  }
+}
+```
+
+Metadata types that are expected to have files associated with them will
+have an `id` that matches an `id` in the manifest.
+
 ## Development
 
 * A simple test demonstrates usage of the Exporter class in `test`.
