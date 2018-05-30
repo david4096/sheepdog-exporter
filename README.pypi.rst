@@ -58,6 +58,18 @@ projects: ``.get_projects()`` and ``.get_programs()``.
 
 See `sheepdog\_exporter.py <sheepdog_exporter.py>`__ for more.
 
+Releases
+~~~~~~~~
+
+Releases are made on the creation of a new tag. Versioning follows
+semantic versioning practices. Any breaking changes to the API should
+result in a change in the major version.
+
+To change the release maintainer, edit the ``travis.yml`` to remove the
+pypi release details. Then follow the directions on `encrypting your
+PyPi credentials using Travis
+CLI <https://docs.travis-ci.com/user/deployment/pypi/>`__.
+
 Issues
 ------
 
