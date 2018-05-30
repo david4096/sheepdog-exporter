@@ -337,7 +337,7 @@ class Exporter:
         of submissions for that type.
         '''
         # FIXME this changes in the next release to object_id
-        id_key = 'id'
+        id_key = 'object_id'
         id_list = [x[id_key] for x in submission_list]
         return [self.safe_indexd_to_dos(x) for x in self.get_indexd_docs(id_list)]
     
