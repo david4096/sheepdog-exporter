@@ -212,9 +212,9 @@ class Exporter:
         Returns all the submissions for a given program, 
         project, type triplet.
         '''
-        url = '{}/{}/{}/export/?node_label={}'.format(self.sheep_url, program, project, my_type)
-        # FIXME returns a TSV
-        return requests.get(url, headers=self.headers()).content
+        url = '{}/{}/{}/export/?node_label={}&format=json'.format(self.sheep_url, program, project, my_type)
+        response = requests.get(url, headers=self.headers())
+        return response.json()['data']
     
     def get_json_submission_by_type(self, program, project, my_type):
         '''
@@ -222,10 +222,8 @@ class Exporter:
         and returns a list of dictionaries.
         '''
         print('Requesting {} submissions.'.format(my_type))
-        # FIXME JSON serialization is done by the server
-        buf = StringIO(self.get_submissions_by_type(program, project, my_type).decode('utf-8'))
-        reader = csv.DictReader(buf, delimiter='\t')
-        dict_list = list(reader)
+        dict_list = self.get_submissions_by_type(program, project, my_type)
+        
         if len(dict_list) > 0:
             print('Got {} {} submissions.'.format(len(dict_list), my_type))
         return dict_list
@@ -253,9 +251,12 @@ class Exporter:
         '''
         print('Getting dictionary for {}-{}'.format(program, project))
         submission_dictionary = self.get_dictionary(program, project)
-        submission_list = pmap(lambda x: self.get_json_submission_by_type(program, project, os.path.basename(x)), submission_dictionary['links'])
-        
-        return dict(zip([os.path.basename(x) for x in submission_dictionary['links']], submission_list))
+        # FIXME why does root return an empty string?
+        filter_keys = ['root', '_all']
+        key_list = [os.path.basename(x) for x in submission_dictionary['links']]
+        filtered_keys = list(filter(lambda x: x not in filter_keys, key_list))
+        submission_list = pmap(lambda x: self.get_json_submission_by_type(program, project, x), filtered_keys)
+        return dict(zip(filtered_keys, submission_list))
     
     def get_indexd_doc(self, indexd_id):
         '''
@@ -467,6 +468,7 @@ USAGE
                 exported = exporter.export(
                     args.program, args.project)
             except Exception as e:
+                print('        Exporting failed!')
                 print(str(e))
                 return 1
             output_path = '{}/{}-{}.json'.format(
