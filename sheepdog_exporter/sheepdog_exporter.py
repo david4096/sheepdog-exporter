@@ -123,11 +123,15 @@ class Exporter:
                         "description": "REQUIRED\nA URL that can be used to access the file."
                       },
                       "system_metadata": {
-                        "$ref": "#/definitions/SystemMetadata"
+                          "type": "object",
+                          "additionalProperties": True,
+                          "description": "OPTIONAL\nThese values are reported by the underlying object store.\nA set of key-value pairs that represent system metadata about the object."
                       },
                       "user_metadata": {
-                        "$ref": "#/definitions/UserMetadata"
-                      }
+                          "type": "object",
+                          "additionalProperties": True,
+                          "description": "OPTIONAL\nA set of key-value pairs that represent metadata provided by the uploader."
+                        }
                     }
                 },
                 'description': 'OPTIONAL\nThe list of URLs that can be used to access the Data Object.'
