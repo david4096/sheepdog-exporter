@@ -123,11 +123,15 @@ class Exporter:
                         "description": "REQUIRED\nA URL that can be used to access the file."
                       },
                       "system_metadata": {
-                        "$ref": "#/definitions/SystemMetadata"
+                          "type": "object",
+                          "additionalProperties": True,
+                          "description": "OPTIONAL\nThese values are reported by the underlying object store.\nA set of key-value pairs that represent system metadata about the object."
                       },
                       "user_metadata": {
-                        "$ref": "#/definitions/UserMetadata"
-                      }
+                          "type": "object",
+                          "additionalProperties": True,
+                          "description": "OPTIONAL\nA set of key-value pairs that represent metadata provided by the uploader."
+                        }
                     }
                 },
                 'description': 'OPTIONAL\nThe list of URLs that can be used to access the Data Object.'
@@ -152,7 +156,7 @@ class Exporter:
             'properties': {
                 'metadata': {
                     'type': 'object'},
-                'manifest': {
+                'data_objects': {
                     'type': 'array',
                     'items': data_object_schema},
                 }
@@ -212,9 +216,9 @@ class Exporter:
         Returns all the submissions for a given program, 
         project, type triplet.
         '''
-        url = '{}/{}/{}/export/?node_label={}'.format(self.sheep_url, program, project, my_type)
-        # FIXME returns a TSV
-        return requests.get(url, headers=self.headers()).content
+        url = '{}/{}/{}/export/?node_label={}&format=json'.format(self.sheep_url, program, project, my_type)
+        response = requests.get(url, headers=self.headers())
+        return response.json()['data']
     
     def get_json_submission_by_type(self, program, project, my_type):
         '''
@@ -222,10 +226,8 @@ class Exporter:
         and returns a list of dictionaries.
         '''
         print('Requesting {} submissions.'.format(my_type))
-        # FIXME JSON serialization is done by the server
-        buf = StringIO(self.get_submissions_by_type(program, project, my_type).decode('utf-8'))
-        reader = csv.DictReader(buf, delimiter='\t')
-        dict_list = list(reader)
+        dict_list = self.get_submissions_by_type(program, project, my_type)
+        
         if len(dict_list) > 0:
             print('Got {} {} submissions.'.format(len(dict_list), my_type))
         return dict_list
@@ -253,9 +255,12 @@ class Exporter:
         '''
         print('Getting dictionary for {}-{}'.format(program, project))
         submission_dictionary = self.get_dictionary(program, project)
-        submission_list = pmap(lambda x: self.get_json_submission_by_type(program, project, os.path.basename(x)), submission_dictionary['links'])
-        
-        return dict(zip([os.path.basename(x) for x in submission_dictionary['links']], submission_list))
+        # FIXME why does root return an empty string?
+        filter_keys = ['root', '_all']
+        key_list = [os.path.basename(x) for x in submission_dictionary['links']]
+        filtered_keys = list(filter(lambda x: x not in filter_keys, key_list))
+        submission_list = pmap(lambda x: self.get_json_submission_by_type(program, project, x), filtered_keys)
+        return dict(zip(filtered_keys, submission_list))
     
     def get_indexd_doc(self, indexd_id):
         '''
@@ -337,7 +342,7 @@ class Exporter:
         of submissions for that type.
         '''
         # FIXME this changes in the next release to object_id
-        id_key = 'id'
+        id_key = 'object_id'
         id_list = [x[id_key] for x in submission_list]
         return [self.safe_indexd_to_dos(x) for x in self.get_indexd_docs(id_list)]
     
@@ -378,7 +383,7 @@ class Exporter:
             print('There was a problem finding paths for some of the files.')
             print('This could be due to an error in loading the metadata.')
             print('Please contact the system administrator!')
-        output = {'metadata': submissions, 'manifest': pruned_manifest}
+        output = {'metadata': submissions, 'data_objects': pruned_manifest}
         self.validate_output(output)
         return output
 
@@ -467,6 +472,7 @@ USAGE
                 exported = exporter.export(
                     args.program, args.project)
             except Exception as e:
+                print('        Exporting failed!')
                 print(str(e))
                 return 1
             output_path = '{}/{}-{}.json'.format(
@@ -488,7 +494,7 @@ USAGE
             pretty_content = "\n".join(['{} {}'.format(os.path.basename(x[0]).ljust(56), x[1]) for x in content])
             print(pretty_content)
             print('')
-            print('{} paths have been written to the file manifest!'.format(len(exported['manifest'])))
+            print('{} paths have been written to the Data Object manifest!'.format(len(exported['data_objects'])))
             print('\nThe output has been written to {}!'.format(output_path))
         return 0
     except KeyboardInterrupt:
