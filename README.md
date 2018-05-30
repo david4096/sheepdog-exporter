@@ -30,6 +30,8 @@ have an `id` that matches an `id` in the manifest.
 
 ## Development
 
+<img src="diagrams/sheepdog_exporter.svg" width="250" />
+
 * A simple test demonstrates usage of the Exporter class in `test`.
 
 ### Using the Python API
@@ -52,6 +54,7 @@ See [sheepdog_exporter.py](sheepdog_exporter.py) for more.
 ## Issues
 
 * Provenance to the original JSON schemas are lost.
+  * It has not been tested if JSON dumps can be used as sheepdog input.
 * Some functions in the exporter are unused.
 * Print messages cannot be easily suppressed.
 * Errors in converting data from DCP are not always relayed properly to the CLI.

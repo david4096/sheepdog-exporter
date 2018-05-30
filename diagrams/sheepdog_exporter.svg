@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="37cm" height="16cm" viewBox="331 258 725 316" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="Background">
+    <g>
+      <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x="333" y="292" width="201" height="156" rx="0" ry="0"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="433.5" y="373.9">
+        <tspan x="433.5" y="373.9">gen3 DCP</tspan>
+      </text>
+    </g>
+    <g>
+      <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x="502" y="306" width="96" height="54" rx="0" ry="0"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="550" y="336.9">
+        <tspan x="550" y="336.9">sheepdog</tspan>
+      </text>
+    </g>
+    <g>
+      <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x="502.4" y="380.4" width="96" height="54" rx="0" ry="0"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="550.4" y="411.3">
+        <tspan x="550.4" y="411.3">indexd</tspan>
+      </text>
+    </g>
+    <g>
+      <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x="668.325" y="339.4" width="144.15" height="54" rx="0" ry="0"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="740.4" y="370.3">
+        <tspan x="740.4" y="370.3">sheepdog-exporter</tspan>
+      </text>
+    </g>
+    <g>
+      <path style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" d="M 655.775 462 L 723.225,462 C 732.538,462 740.088,466.925 740.088,473 C 740.088,479.075 732.538,484 723.225,484 L 655.775,484 C 646.462,484 638.913,479.075 638.913,473 C 638.913,466.925 646.462,462 655.775,462z"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="689.5" y="477">
+        <tspan x="689.5" y="477">program?</tspan>
+      </text>
+    </g>
+    <g>
+      <path style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" d="M 657.712 439.4 L 714.962,439.4 C 722.867,439.4 729.275,444.325 729.275,450.4 C 729.275,456.475 722.867,461.4 714.962,461.4 L 657.712,461.4 C 649.808,461.4 643.4,456.475 643.4,450.4 C 643.4,444.325 649.808,439.4 657.712,439.4z"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="686.337" y="454.4">
+        <tspan x="686.337" y="454.4">project?</tspan>
+      </text>
+    </g>
+    <g>
+      <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x="911.4" y="260" width="144.15" height="212.4" rx="0" ry="0"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="983.475" y="370.1">
+        <tspan x="983.475" y="370.1"></tspan>
+      </text>
+    </g>
+    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="935" y="283">
+      <tspan x="935" y="283">Exported JSON</tspan>
+    </text>
+    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="921" y="313">
+      <tspan x="921" y="313">metadata</tspan>
+    </text>
+    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="920.4" y="396.3">
+      <tspan x="920.4" y="396.3">data_objects</tspan>
+    </text>
+    <g>
+      <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x="947" y="413" width="47" height="38" rx="0" ry="0"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="970.5" y="435.9">
+        <tspan x="970.5" y="435.9"></tspan>
+      </text>
+    </g>
+    <g>
+      <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x="952.4" y="418.4" width="47" height="38" rx="0" ry="0"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="975.9" y="441.3">
+        <tspan x="975.9" y="441.3"></tspan>
+      </text>
+    </g>
+    <g>
+      <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x="957.8" y="424.8" width="47" height="38" rx="0" ry="0"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="981.3" y="447.7">
+        <tspan x="981.3" y="447.7">id</tspan>
+      </text>
+    </g>
+    <g>
+      <rect style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x="917" y="326" width="129" height="40" rx="0" ry="0"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="981.5" y="349.9">
+        <tspan x="981.5" y="349.9">key: list[]</tspan>
+      </text>
+    </g>
+    <g>
+      <path style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" d="M 782.663 462.4 L 859.312,462.4 C 869.896,462.4 878.475,467.325 878.475,473.4 C 878.475,479.475 869.896,484.4 859.312,484.4 L 782.663,484.4 C 772.079,484.4 763.5,479.475 763.5,473.4 C 763.5,467.325 772.079,462.4 782.663,462.4z"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="820.987" y="477.4">
+        <tspan x="820.987" y="477.4">credentials</tspan>
+      </text>
+    </g>
+    <g>
+      <path style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" d="M 783.562 438.4 L 860.212,438.4 C 870.796,438.4 879.375,443.325 879.375,449.4 C 879.375,455.475 870.796,460.4 860.212,460.4 L 783.562,460.4 C 772.979,460.4 764.4,455.475 764.4,449.4 C 764.4,443.325 772.979,438.4 783.562,438.4z"/>
+      <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="821.887" y="453.4">
+        <tspan x="821.887" y="453.4">dcp_url</tspan>
+      </text>
+    </g>
+    <g>
+      <polyline style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" points="657.58,366.4 633.161,366.4 633.161,333 599.006,333 "/>
+      <polygon style="fill: #000000; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" points="665.08,366.4 655.08,371.4 657.58,366.4 655.08,361.4 "/>
+    </g>
+    <g>
+      <polyline style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" points="657.58,366.4 633.361,366.4 633.361,407.4 599.406,407.4 "/>
+      <polygon style="fill: #000000; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" points="665.08,366.4 655.08,371.4 657.58,366.4 655.08,361.4 "/>
+    </g>
+    <g>
+      <polyline style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" points="813.484,366.4 861.938,366.4 861.938,366.2 900.655,366.2 "/>
+      <polygon style="fill: #000000; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" points="908.155,366.2 898.155,371.2 900.655,366.2 898.155,361.2 "/>
+    </g>
+    <g>
+      <polyline style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" points="686.337,438.403 686.337,416.405 740.4,416.405 740.4,404.143 "/>
+      <polygon style="fill: #000000; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" points="740.4,396.643 745.4,406.643 740.4,404.143 735.4,406.643 "/>
+    </g>
+    <g>
+      <polyline style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" points="821.887,437.403 821.887,415.905 740.4,415.905 740.4,404.143 "/>
+      <polygon style="fill: #000000; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" fill-rule="evenodd" points="740.4,396.643 745.4,406.643 740.4,404.143 735.4,406.643 "/>
+    </g>
+    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="606" y="507">
+      <tspan x="606" y="507">optional</tspan>
+      <tspan x="606" y="523"></tspan>
+      <tspan x="606" y="539">may return a list</tspan>
+      <tspan x="606" y="555">of projects or </tspan>
+      <tspan x="606" y="571">programs</tspan>
+    </text>
+    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="817" y="505">
+      <tspan x="817" y="505">required</tspan>
+    </text>
+  </g>
+</svg>
