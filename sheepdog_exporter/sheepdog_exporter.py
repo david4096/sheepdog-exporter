@@ -156,7 +156,7 @@ class Exporter:
             'properties': {
                 'metadata': {
                     'type': 'object'},
-                'manifest': {
+                'data_objects': {
                     'type': 'array',
                     'items': data_object_schema},
                 }
@@ -383,7 +383,7 @@ class Exporter:
             print('There was a problem finding paths for some of the files.')
             print('This could be due to an error in loading the metadata.')
             print('Please contact the system administrator!')
-        output = {'metadata': submissions, 'manifest': pruned_manifest}
+        output = {'metadata': submissions, 'data_objects': pruned_manifest}
         self.validate_output(output)
         return output
 
@@ -494,7 +494,7 @@ USAGE
             pretty_content = "\n".join(['{} {}'.format(os.path.basename(x[0]).ljust(56), x[1]) for x in content])
             print(pretty_content)
             print('')
-            print('{} paths have been written to the file manifest!'.format(len(exported['manifest'])))
+            print('{} paths have been written to the Data Object manifest!'.format(len(exported['data_objects'])))
             print('\nThe output has been written to {}!'.format(output_path))
         return 0
     except KeyboardInterrupt:
