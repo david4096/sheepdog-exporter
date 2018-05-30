@@ -1,3 +1,4 @@
 include README.pypi.rst
 include *.txt
 recursive-include sheepdog_exporter *.py
+include diagrams/sheepdog_exporter.svg
