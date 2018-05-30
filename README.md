@@ -1,4 +1,4 @@
-# sheepdog-exporter
+# sheepdog-exporter 🐑🐑
 <img src="https://travis-ci.org/david4096/sheepdog-exporter.svg?branch=master" /> <img src="https://img.shields.io/pypi/v/sheepdog-exporter.svg" />
 
 Export metadata from the DCP!
@@ -56,8 +56,8 @@ See [sheepdog_exporter.py](sheepdog_exporter.py) for more.
 
 ## Issues
 
-* Provenance to the original JSON schemas are lost.
+* Provenance to the original JSON schemas are lost. #9
   * It has not been tested if JSON dumps can be used as sheepdog input.
 * Some functions in the exporter are unused.
-* Print messages cannot be easily suppressed.
-* Errors in converting data from DCP are not always relayed properly to the CLI.
+* Print messages cannot be easily suppressed. #12
+* Errors in converting data from DCP are not always relayed properly to the CLI. #11
