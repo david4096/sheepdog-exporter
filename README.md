@@ -1,24 +1,29 @@
 # sheepdog-exporter
 <img src="https://travis-ci.org/david4096/sheepdog-exporter.svg?branch=master" /> <img src="https://img.shields.io/pypi/v/sheepdog-exporter.svg" />
 
-Export metadata from the DCP.
+Export metadata from the DCP!
+
+<img src="diagrams/sheepdog_exporter.svg" width="450" />
+
+First, download your credentials from the <a href="https://dcp.bionimbus.org">DCP Web interface</a>.
+
+Then, install sheepdog exporter: `pip install sheepdog-exporter`.
+
+You can now find programs to export using: `sheepdog-exporter`!
+
+Once you've found a program and project you want to export, use: `sheepdog-exporter my_program my_project`. This will create a JSON file in the current directory with all of the relevant metadata!
+
+You can change the output path, path to your credentials, or the DCP URL using arguments:
 
 ```
-# Download the credentials.json from the DCP web UI and put in the current directory
-pip install sheepdog-exporter
-sheepdog-exporter program project
-
 sheepdog-exporter program project --dcp-url my-url --credentials path/to/credentials --output-path /path/to/write/output
 ```
-
-This will write a `.json` file with the corresponding metadata
-with a filename corresponding to the program and project. `program-project.json`.
 
 The resulting JSON has the form:
 
 ```
 {
-  "manifest": [{DataObject},...],
+  "data_objects": [{DataObject},...],
   "metadata": {
         metadata_type: [{metadata_value}], ...
   }
@@ -26,11 +31,9 @@ The resulting JSON has the form:
 ```
 
 Metadata types that are expected to have files associated with them will
-have an `id` that matches an `id` in the manifest.
+have an `object_id` that matches an `object_id` in the data object manifest.
 
 ## Development
-
-<img src="diagrams/sheepdog_exporter.svg" width="250" />
 
 * A simple test demonstrates usage of the Exporter class in `test`.
 
