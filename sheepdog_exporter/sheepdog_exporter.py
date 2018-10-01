@@ -218,7 +218,12 @@ class Exporter:
         '''
         url = '{}/{}/{}/export/?node_label={}&format=json'.format(self.sheep_url, program, project, my_type)
         response = requests.get(url, headers=self.headers())
-        return response.json()['data']
+        try:
+            submissions = response.json()['data']
+        except Exception as e:
+            print('WARNING!!! There was a problem parsing the submission for {}, {}'.format(my_type, str(e)))
+            submissions = {}
+        return submissions
     
     def get_json_submission_by_type(self, program, project, my_type):
         '''
