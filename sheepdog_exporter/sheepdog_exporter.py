@@ -218,7 +218,14 @@ class Exporter:
         '''
         url = '{}/{}/{}/export/?node_label={}&format=json'.format(self.sheep_url, program, project, my_type)
         response = requests.get(url, headers=self.headers())
-        return response.json()['data']
+        try:
+            submissions = response.json()['data']
+        except (KeyError, ValueError, UnicodeDecodeError) as e:
+            message = '''WARNING!!! There was a problem parsing the 
+                         submission for {}, missing key: {}'''.format(my_type, str(e))
+            print(message, file=sys.stderr)
+            submissions = {}
+        return submissions
     
     def get_json_submission_by_type(self, program, project, my_type):
         '''
