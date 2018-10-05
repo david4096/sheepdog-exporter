@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3.5
 # encoding: utf-8
 '''
- -- Export metadata from sheepdog
+ -- Export metadata from gen3
 
  is a description
 
@@ -53,6 +53,7 @@ class Exporter:
             credentials_filename)
         self.sheep_url = '{}/api/v0/submission'.format(base_url)
         self.indexd_url = '{}/index/index/'.format(base_url)
+        self.peregrine_url = '{}/api/v0/submission/graphql'.format(base_url)
         self.schema = self.init_schema()
     
     
@@ -254,6 +255,56 @@ class Exporter:
         projects_url = '{}/{}/'.format(self.sheep_url, program)
         raw_projects = requests.get(projects_url, headers=self.headers()).json()['links']
         return [os.path.basename(x) for x in raw_projects]
+
+    def get_project_by_code(self, project_code):
+        '''
+        Requests a project by project code from peregrine and returns a dictionary.
+        '''
+        query_string = """query {project (first:0, code: "%s") {
+          availability_mechanism
+          availability_type
+          code
+          date_collected
+          dbgap_accession_number
+          id
+          intended_release_date
+          investigator_affiliation
+          investigator_name
+          name
+          releasable
+          released
+          state
+          support_id
+          support_source
+        }}""" % project_code
+        query = {'query': query_string}
+        try:
+            output = requests.post(self.peregrine_url, headers=self.headers(), json=query).json()
+            project = output['data']['project'][0]
+        except Exception as e:
+            print(e)
+            project = {}
+        return project
+
+    def get_program_by_name(self, program_name):
+        '''
+        Requests a program by name from peregrine and returns as a dictionary.
+        '''
+        print('hi')
+        query_string = """query {program (first:0, name: "%s") {
+          dbgap_accession_number
+          id
+          name
+        }}""" % program_name
+        query = {'query': query_string}
+        try:
+            output = requests.post(self.peregrine_url, headers=self.headers(), json=query).json()
+            print(output)
+            program = output['data']['program'][0]
+        except Exception as e:
+            print(e)
+            program = {}
+        return program
     
     def get_all_submissions(self, program, project):
         '''
@@ -377,8 +428,13 @@ class Exporter:
         Exports a given program and project as a dictionary
         and returns that dictionary.
         '''
+        print('Request program and project metadata...')
+        program_dict = self.get_program_by_name(program)
+        project_dict = self.get_project_by_code(project)
         print('Requesting metadata submissions.')
         submissions = self.get_all_submissions(program, project)
+        submissions['program'] = program_dict
+        submissions['project'] = project_dict
         print('Received all metadata submissions!')
         print('Generating file manifest, this may take some time...')
         manifest = self.manifest(program, project, submissions)
